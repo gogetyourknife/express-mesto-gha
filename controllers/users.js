@@ -1,14 +1,14 @@
 const User = require('../models/user');
 
-const ERROR = 400;
-const ERR_CODE = 404;
-const ERROR_CODE = 500;
+const ERROR_NOT_VALID = 400;
+const ERROR_NOT_FOUND = 404;
+const ERROR_DEFAULT = 500;
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
     .catch(() => res
-      .status(ERROR_CODE)
+      .status(ERROR_DEFAULT)
       .send({ message: 'Внутренняя ошибка сервера' }));
 };
 
@@ -17,19 +17,20 @@ module.exports.getUser = (req, res) => {
     .then((user) => {
       if (!user) {
         res
-          .status(ERR_CODE)
+          .status(ERROR_NOT_FOUND)
           .send({ message: 'Пользователь не найден' });
+      } else {
+        res.send({ data: user });
       }
-      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(ERROR)
+          .status(ERROR_NOT_VALID)
           .send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(ERROR_CODE)
+        .status(ERROR_DEFAULT)
         .send({ message: 'Внутренняя ошибка сервера' });
     });
 };
@@ -41,11 +42,11 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(ERROR)
+          .status(ERROR_NOT_VALID)
           .send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(ERROR_CODE)
+        .status(ERROR_DEFAULT)
         .send({ message: 'Внутренняя ошибка сервера' });
     });
 };
@@ -61,11 +62,11 @@ module.exports.updateProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(ERROR)
+          .status(ERROR_NOT_VALID)
           .send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(ERROR_CODE)
+        .status(ERROR_DEFAULT)
         .send({ message: 'Внутренняя ошибка сервера' });
     });
 };
@@ -81,11 +82,11 @@ module.exports.updateAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(ERROR)
+          .status(ERROR_NOT_VALID)
           .send({ message: 'Некорректный запрос' });
       }
       return res
-        .status(ERROR_CODE)
+        .status(ERROR_DEFAULT)
         .send({ message: 'Внутренняя ошибка сервера' });
     });
 };

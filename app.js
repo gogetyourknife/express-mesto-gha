@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
-const ERR_CODE = 404;
+const ERROR_NOT_FOUND = 404;
 
 const app = express();
 
@@ -16,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '62e0b585bf9c48cc89f31d2d'
+    _id: '62e0b585bf9c48cc89f31d2d',
   };
   next();
 });
@@ -26,9 +26,8 @@ app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res) => {
   res
-    .status(ERR_CODE)
+    .status(ERROR_NOT_FOUND)
     .send({ message: 'Запрашиваемый ресурс не найден' });
 });
-
 
 app.listen(PORT);
