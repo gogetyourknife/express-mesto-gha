@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
+const ERR_CODE = 404;
 
 const app = express();
 
@@ -22,6 +23,12 @@ app.use((req, res, next) => {
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use('/', (req, res) => {
+  res
+    .status(ERR_CODE)
+    .send({ message: 'Запрашиваемый ресурс не найден' });
+});
 
 
 app.listen(PORT);
