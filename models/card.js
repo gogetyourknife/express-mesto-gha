@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const regex = require('../utils/regex');
 
 const { ObjectId } = mongoose.Schema;
 
@@ -12,6 +13,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => regex.test(v),
+      message: 'Некорретный адрес ссылки',
+    },
   },
   owner: {
     type: ObjectId,
