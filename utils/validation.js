@@ -12,7 +12,7 @@ const userSchemaValidate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(regex),
+    avatar: Joi.string().pattern(new RegExp(regex)),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -33,14 +33,14 @@ const profileSchemaValidate = celebrate({
 
 const avatarSchemaValidate = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(regex),
+    avatar: Joi.string().required().pattern(new RegExp(regex)),
   }),
 });
 
 const cardSchemaValidate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(regex),
+    link: Joi.string().required().pattern(new RegExp(regex)),
   }),
 });
 
