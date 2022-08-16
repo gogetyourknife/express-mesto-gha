@@ -33,7 +33,7 @@ app.use('/', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
-app.use('/', (req, res, err, next) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)
@@ -44,6 +44,5 @@ app.use('/', (req, res, err, next) => {
     });
   next();
 });
-app.use(errors());
 
 app.listen(PORT);
