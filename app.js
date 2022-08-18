@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const { auth } = require('./middlewares/auth');
 
@@ -20,11 +21,17 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use(auth);
-app.use(errors());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 app.post('/signin', login, loginValidate);
 app.post('/signup', createUser, userSchemaValidate);
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
@@ -32,6 +39,8 @@ app.use('/cards', require('./routes/cards'));
 app.use('/', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
@@ -45,4 +54,5 @@ app.use((err, req, res, next) => {
   next();
 });
 
+app.use(limiter);
 app.listen(PORT);
